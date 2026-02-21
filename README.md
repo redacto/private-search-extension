@@ -1,7 +1,8 @@
-<img width="413" height="285" alt="image" src="https://github.com/user-attachments/assets/abc0d2e5-994b-47fa-8844-029400e4668c" />
-<BR><BR>
+<img width="378" height="312" alt="image" src="https://github.com/user-attachments/assets/94c936ee-3f3d-48e1-8f14-e5f1cd5a50a0" />
+
+<BR>
 Chrome extension works in Brave and Edge
-<BR><BR>
+<BR>
 Firefox extension works in Librewolf, Mullvad and TOR browser
 
 ---
