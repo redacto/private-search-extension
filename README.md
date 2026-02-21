@@ -3,3 +3,42 @@
 Chrome extension works in Brave and Edge
 <BR><BR>
 Firefox extension works in Librewolf, Mullvad and TOR browser
+
+---
+
+## About
+
+Anonymous Google Search prevents Google from linking your search queries to your account. It does not log you out of Google — Gmail, Calendar, Drive, and all other Google services continue to work normally. Only search requests are affected.
+
+## How it works
+
+Google identifies signed-in users through several channels simultaneously. The extension addresses all of them:
+
+**HTTP Cookie stripping**
+Before each request to `google.com/search`, the extension removes the `Cookie` request header using the browser's declarative network request API. Google receives the search query but no session tokens, so it processes the request as if made by a signed-out visitor.
+
+**Client-side cookie hiding**
+Google's page JavaScript reads `document.cookie` directly to determine sign-in state and render the account widget. The extension injects a script at `document_start` — before any page code runs — that overrides the `document.cookie` getter to return an empty string. The cookies remain in the browser's store and are available to other Google services; they are only hidden from Google Search's own scripts.
+
+**Tracking parameter removal**
+Chrome and Firefox append tracking parameters to every search URL (`rlz`, `oq`, `aqs`). The extension redirects these URLs at the network level, stripping those parameters before the request leaves the browser. It also intercepts `history.pushState` and `history.replaceState` to remove server-side tracking parameters (`sei`, `ved`, `ei`, and others) that Google appends to the URL after the page loads.
+
+**Tracking cookie suppression**
+The following cookies are deleted immediately if Google attempts to set them: `NID`, `ANID`, `IDE`, `DSID`, `OTZ`, `AEC`, `1P_JAR`, `DV`, `UULE`. These are used for ad targeting, session binding, and geo-tracking, and serve no functional purpose for search.
+
+## Optional service protection
+
+YouTube and YouTube Music can optionally be isolated in the same way. When enabled for a service, the extension strips cookies from all requests to that service's domain, overrides `document.cookie` on those pages, and blocks cross-origin identity checks — the background XHR requests those services make to `accounts.google.com` to verify sign-in state.
+
+On Chrome, cross-origin identity checks are intercepted using declarative network rules scoped to the initiating domain. On Firefox, the equivalent is implemented using the blocking `webRequest` API, which inspects the `originUrl` of each request to `*.google.com` to determine whether it was initiated by an enabled service.
+
+## Architecture
+
+| Component | Role |
+|---|---|
+| `rules.json` | Static declarative rules: strips `Cookie` from Google Search requests, redirects tracking-parameter URLs |
+| `content.js` | Injected into Google Search at `document_start` in the page's JS context; hides cookies from page scripts and cleans URLs via history API interception |
+| `background.js` | Service worker (Chrome) / persistent background page (Firefox); manages dynamic rules, cookie suppression, and service toggles |
+| `cookie-hide.js` | Dynamically injected into optional service pages when their toggle is on; hides cookies from page scripts on those domains |
+| `services.js` | Shared service definitions consumed by both the background script and the popup |
+| `popup.html/js` | Toggle UI for enabling/disabling protection per service |
