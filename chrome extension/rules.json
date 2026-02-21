@@ -58,7 +58,7 @@
       "redirect": { "regexSubstitution": "https://www.google.com/search?q=\\1" }
     },
     "condition": {
-      "regexFilter": "^https://(?:www\\.)?google\\.com/search\\?q=([^&#]*)(?:[^#]*&)(?:rlz|oq|aqs)=[^#]*$",
+      "regexFilter": "^https://(?:www\\.)?google\\.com/search\\?q=([^&#]*)&(?:rlz|oq|aqs)=[^#]*$",
       "resourceTypes": ["main_frame"]
     }
   }

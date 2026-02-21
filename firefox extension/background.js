@@ -29,20 +29,21 @@ chrome.cookies.onChanged.addListener((changeInfo) => {
     ? 'www' + cookie.domain
     : cookie.domain;
   const url = `https://${host}${cookie.path || '/'}`;
-  chrome.cookies.remove({ url, name: cookie.name });
+  chrome.cookies.remove({ url, name: cookie.name }, () => { void chrome.runtime.lastError; });
 });
 
 // ── Dynamic content script management ──────────────────────────────────────
 const SCRIPT_PREFIX = 'cookie_hide_';
 
 function buildScriptDef(svc) {
+  // Note: persistAcrossSessions is Chrome-only and not supported in Firefox.
+  // Scripts are explicitly re-registered on every startup in the init block below.
   return {
     id: SCRIPT_PREFIX + svc.id,
     matches: svc.matches,
     js: ['cookie-hide.js'],
     runAt: 'document_start',
     world: 'MAIN',
-    persistAcrossSessions: true,
   };
 }
 
@@ -51,7 +52,11 @@ async function syncServiceScript(svc, enable) {
     await chrome.scripting.unregisterContentScripts({ ids: [SCRIPT_PREFIX + svc.id] });
   } catch (_) {}
   if (enable) {
-    await chrome.scripting.registerContentScripts([buildScriptDef(svc)]);
+    try {
+      await chrome.scripting.registerContentScripts([buildScriptDef(svc)]);
+    } catch (err) {
+      console.error('[Anonymous Google Search] registerContentScripts failed:', err);
+    }
   }
 }
 
@@ -130,10 +135,18 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
   ['blocking', 'requestHeaders']
 );
 
-// ── Initialise enabledServices from storage (runs on every background startup) ─
-chrome.storage.local.get(null, (state) => {
+// ── Initialise enabledServices and re-register content scripts on every startup ─
+//
+// Firefox does not support persistAcrossSessions for dynamically registered
+// content scripts, so we must explicitly re-register them on every background
+// page startup (not just on install/update). Without this, cookie-hide.js would
+// not be injected after a browser restart even if a service was enabled.
+chrome.storage.local.get(null, async (state) => {
   for (const svc of SERVICES) {
-    if (state[svc.id] === true) enabledServices.add(svc.id);
+    if (state[svc.id] === true) {
+      enabledServices.add(svc.id);
+      await syncServiceScript(svc, true);
+    }
   }
 });
 

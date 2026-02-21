@@ -28,7 +28,7 @@ chrome.cookies.onChanged.addListener((changeInfo) => {
     ? 'www' + cookie.domain
     : cookie.domain;
   const url = `https://${host}${cookie.path || '/'}`;
-  chrome.cookies.remove({ url, name: cookie.name });
+  chrome.cookies.remove({ url, name: cookie.name }, () => { void chrome.runtime.lastError; });
 });
 
 // ── Dynamic content script management ──────────────────────────────────────
@@ -50,7 +50,11 @@ async function syncServiceScript(svc, enable) {
     await chrome.scripting.unregisterContentScripts({ ids: [SCRIPT_PREFIX + svc.id] });
   } catch (_) {}
   if (enable) {
-    await chrome.scripting.registerContentScripts([buildScriptDef(svc)]);
+    try {
+      await chrome.scripting.registerContentScripts([buildScriptDef(svc)]);
+    } catch (err) {
+      console.error('[Anonymous Google Search] registerContentScripts failed:', err);
+    }
   }
 }
 
