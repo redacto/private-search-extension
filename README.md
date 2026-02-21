@@ -1,9 +1,9 @@
 <img width="378" height="312" alt="image" src="https://github.com/user-attachments/assets/94c936ee-3f3d-48e1-8f14-e5f1cd5a50a0" />
 
 <BR>
-Chrome extension works in Brave and Edge
+Chromium extension works in Chrome, Brave and Edge
 <BR>
-Firefox extension works in Librewolf, Mullvad and TOR browser
+Firefox based extension works in Firefox, Librewolf, Mullvad and TOR browser
 
 ---
 
