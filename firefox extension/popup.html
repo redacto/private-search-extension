@@ -137,6 +137,16 @@
     input:checked + .slider::before { transform: translateX(16px); }
     input:disabled + .slider { cursor: default; opacity: 0.7; }
 
+    /* ── Warning footer ──────────────────────────────────── */
+    .warning {
+      padding: 10px 16px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #202124;
+      border-top: 1px solid #e8eaed;
+      line-height: 1.5;
+    }
+
     /* ── "Included with Search" badge ────────────────────── */
     .badge {
       font-size: 10px;
@@ -160,13 +170,12 @@
       <line x1="2.5"  y1="12" x2="6"   y2="12"  stroke="#1a73e8" stroke-width="1.5" stroke-linecap="round"/>
       <line x1="18"   y1="12" x2="21.5" y2="12" stroke="#1a73e8" stroke-width="1.5" stroke-linecap="round"/>
     </svg>
-    <h1>Anonymous Google Search</h1>
+    <h1>Logged out Google Searches</h1>
   </div>
 
   <div class="main-row">
     <div>
       <div class="label">🔍 Google Search</div>
-      <div class="sub">Strips cookies from all searches</div>
     </div>
     <label class="toggle">
       <input type="checkbox" id="search-toggle" checked>
@@ -174,8 +183,9 @@
     </label>
   </div>
 
-  <div class="section-head">Also strip cookies for</div>
   <div class="services-list" id="services-list"></div>
+
+  <p class="warning">This extension is intended to only be used when using an anonymous VPN. Using this extension may provide less privacy than using a logged in google account with search history turned off</p>
 
   <script src="services.js"></script>
   <script src="popup.js"></script>
