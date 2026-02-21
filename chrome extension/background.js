@@ -180,6 +180,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           ? { enableRulesetIds: ['main_ruleset'] }
           : { disableRulesetIds: ['main_ruleset'] };
         chrome.declarativeNetRequest.updateEnabledRulesets(opts, () => {
+          if (chrome.runtime.lastError) {
+            chrome.storage.local.set({ searchEnabled: !next });
+            console.error('[Anonymous Google Search] updateEnabledRulesets failed:', chrome.runtime.lastError.message);
+            sendResponse({ error: chrome.runtime.lastError.message });
+            return;
+          }
           sendResponse({ searchEnabled: next });
         });
       });
@@ -210,6 +216,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           : { removeRuleIds: ruleIds };
 
         chrome.declarativeNetRequest.updateDynamicRules(ruleUpdate, async () => {
+          if (chrome.runtime.lastError) {
+            chrome.storage.local.set({ [svc.id]: !next });
+            console.error('[Anonymous Google Search] updateDynamicRules failed:', chrome.runtime.lastError.message);
+            sendResponse({ error: chrome.runtime.lastError.message });
+            return;
+          }
           await syncServiceScript(svc, next);
           sendResponse({ [svc.id]: next });
         });

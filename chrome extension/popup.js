@@ -62,9 +62,13 @@ function renderServices(state) {
       const serviceId = input.dataset.svc;
       input.disabled = true; // prevent double-click while in-flight
       chrome.runtime.sendMessage({ type: 'toggleService', serviceId }, (resp) => {
-        void chrome.runtime.lastError;
+        const err = chrome.runtime.lastError;
         input.disabled = false;
-        if (resp && serviceId in resp) input.checked = resp[serviceId];
+        if (!err && resp && serviceId in resp) {
+          input.checked = resp[serviceId];
+        } else {
+          input.checked = !input.checked; // revert on failure
+        }
       });
     });
   });
@@ -82,9 +86,13 @@ chrome.runtime.sendMessage({ type: 'getState' }, (state) => {
 historyToggle.addEventListener('change', function () {
   this.disabled = true;
   chrome.runtime.sendMessage({ type: 'toggleHistoryDelete' }, (resp) => {
-    void chrome.runtime.lastError;
+    const err = chrome.runtime.lastError;
     this.disabled = false;
-    if (resp) this.checked = resp.historyDelete;
+    if (!err && resp && 'historyDelete' in resp) {
+      this.checked = resp.historyDelete;
+    } else {
+      this.checked = !this.checked; // revert on failure
+    }
   });
 });
 
@@ -92,8 +100,12 @@ historyToggle.addEventListener('change', function () {
 searchToggle.addEventListener('change', function () {
   this.disabled = true;
   chrome.runtime.sendMessage({ type: 'toggleSearch' }, (resp) => {
-    void chrome.runtime.lastError;
+    const err = chrome.runtime.lastError;
     this.disabled = false;
-    if (resp) this.checked = resp.searchEnabled;
+    if (!err && resp && 'searchEnabled' in resp) {
+      this.checked = resp.searchEnabled;
+    } else {
+      this.checked = !this.checked; // revert on failure
+    }
   });
 });
