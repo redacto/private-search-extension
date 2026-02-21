@@ -20,7 +20,8 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Anonymous Google Search"
+    "default_title": "Logged out Google Searches",
+    "default_icon": "icon.svg"
   },
   "content_scripts": [
     {
