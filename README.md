@@ -13,7 +13,7 @@ Anonymous Google Search prevents Google from linking your search queries to your
 
 ## Why?
 
-Prefer Google and YouTube's search results over DuckDuckGo or Brave? This lets you use them without your searches being tied to your Google account — no need to open an incognito window or log out.
+Prefer Google's search results over DuckDuckGo/Brave? This lets you use Google without your searches being tied to your Google account — no need to open an incognito window or log out.
 <b>Important:</b> This is not a true incognito mode. Your searches will still be saved in your local browser history. What this does is strip your Google login credentials from search requests, so your searches aren't linked to your online account — while keeping you logged in on all other Google services.
 
 ## How it works
