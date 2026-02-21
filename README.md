@@ -11,6 +11,11 @@ Firefox based extension works in Firefox, Librewolf, Mullvad and TOR browser
 
 Anonymous Google Search prevents Google from linking your search queries to your account. It does not log you out of Google — Gmail, Calendar, Drive, and all other Google services continue to work normally. Only search requests are affected.
 
+## Why?
+
+Prefer Google and YouTube's search results over DuckDuckGo or Brave? This lets you use them without your searches being tied to your Google account — no need to open an incognito window or log out.
+<b>Important:</b> This is not a true incognito mode. Your searches will still be saved in your local browser history. What this does is strip your Google login credentials from search requests, so your searches aren't linked to your online account — while keeping you logged in on all other Google services.
+
 ## How it works
 
 Google identifies signed-in users through several channels simultaneously. The extension addresses all of them:
