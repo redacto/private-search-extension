@@ -11,7 +11,7 @@ Firefox based extension works in Firefox, Librewolf, Mullvad and TOR browser
 
 Anonymous Google Search lets you use Google and YouTube search without your queries being linked to your Google account — no incognito window or logout required. Gmail, Calendar, Drive, and all other Google services remain fully logged in and unaffected; only search requests are stripped of your account credentials.
 
-<b>Note:</b> This is not a true incognito mode. Your searches will still appear in your local browser history. The only thing this does is prevent Google from associating your searches with your online account. Additionally, This should only be used with a VPN, as using a logged in account with "search history" turned off is likely more secure than using this with a static identifiable IP address.
+<b>Note:</b> This is not a true incognito mode. By default, your searches will still appear in your local browser history, though this can be disabled via the popup. The only thing this does is prevent Google from associating your searches with your online account. Additionally, this should only be used with a VPN, as using a logged in account with "search history" turned off is likely more secure than using this with a static identifiable IP address.
 
 ## How it works
 
@@ -40,10 +40,6 @@ This works by listening for `history.onVisited` events and calling `history.dele
 YouTube and YouTube Music can optionally be isolated in the same way. When enabled for a service, the extension strips cookies from all requests to that service's domain, overrides `document.cookie` on those pages, and blocks cross-origin identity checks — the background XHR requests those services make to `accounts.google.com` to verify sign-in state.
 
 On Chrome, cross-origin identity checks are intercepted using declarative network rules scoped to the initiating domain. On Firefox, the equivalent is implemented using the blocking `webRequest` API, which inspects the `originUrl` of each request to `*.google.com` to determine whether it was initiated by an enabled service.
-
-## Privacy note
-
-This extension is designed for use with an anonymous VPN. Without one, your IP address remains visible to Google and can be used to correlate searches — potentially with more precision than a signed-in account that has Search History disabled. The extension removes account-level identifiers from search requests; it does not anonymise the network connection itself.
 
 ## Architecture
 
