@@ -147,6 +147,11 @@
       line-height: 1.5;
     }
 
+    .warning a {
+      color: #1a73e8;
+      text-decoration: underline;
+    }
+
     /* ── "Included with Search" badge ────────────────────── */
     .badge {
       font-size: 10px;
@@ -178,7 +183,7 @@
 
   <div class="services-list" id="services-list"></div>
 
-  <p class="warning">This extension is intended to only be used when using an anonymous VPN. Using this extension may provide less privacy than using a logged in google account with search history turned off</p>
+  <p class="warning">This extension is designed for use with an anonymous VPN. Without one, using this extension may result in less privacy than a logged-in Google account with <a href="https://myactivity.google.com/myactivity" target="_blank" rel="noopener noreferrer">Search History disabled</a>.</p>
 
   <script src="services.js"></script>
   <script src="popup.js"></script>
