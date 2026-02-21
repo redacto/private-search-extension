@@ -1,4 +1,4 @@
-<img width="378" height="312" alt="image" src="https://github.com/user-attachments/assets/94c936ee-3f3d-48e1-8f14-e5f1cd5a50a0" />
+<img width="330" height="358" alt="image" src="https://github.com/user-attachments/assets/0ec27269-8a58-4c5d-a525-dd10bfbd6180" />
 
 <BR>
 Chromium extension works in Chrome, Brave and Edge
