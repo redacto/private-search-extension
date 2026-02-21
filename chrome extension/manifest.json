@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "Anonymous Google Search",
+  "version": "1.5",
+  "description": "Strips cookies from Google Search requests to keep searches anonymous, while leaving Gmail, Calendar, and other Google services unaffected.",
+  "permissions": [
+    "declarativeNetRequest",
+    "storage",
+    "cookies",
+    "scripting"
+  ],
+  "host_permissions": [
+    "*://google.com/*",
+    "*://*.google.com/*",
+    "*://youtube.com/*",
+    "*://*.youtube.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Anonymous Google Search"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.google.com/search*", "https://google.com/search*"],
+      "js": ["content.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    }
+  ],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "main_ruleset",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  }
+}

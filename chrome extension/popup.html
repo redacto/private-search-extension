@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      width: 300px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #fff;
+      color: #202124;
+      font-size: 13px;
+    }
+
+    /* ── Header ─────────────────────────────────────────── */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-bottom: 1px solid #e8eaed;
+    }
+
+    .header svg { flex-shrink: 0; }
+
+    .header h1 {
+      font-size: 13px;
+      font-weight: 600;
+      color: #202124;
+      white-space: nowrap;
+    }
+
+    /* ── Main Search row ─────────────────────────────────── */
+    .main-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background: #f8f9fa;
+      border-bottom: 1px solid #e8eaed;
+    }
+
+    .main-row .label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #202124;
+    }
+
+    .main-row .sub {
+      font-size: 11px;
+      color: #80868b;
+      margin-top: 2px;
+    }
+
+    /* ── Section heading ─────────────────────────────────── */
+    .section-head {
+      padding: 9px 16px 5px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.7px;
+      text-transform: uppercase;
+      color: #9aa0a6;
+    }
+
+    /* ── Services list ───────────────────────────────────── */
+    .services-list {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .services-list::-webkit-scrollbar { width: 4px; }
+    .services-list::-webkit-scrollbar-thumb {
+      background: #dadce0;
+      border-radius: 4px;
+    }
+
+    .svc-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 16px;
+      border-bottom: 1px solid #f1f3f4;
+      min-height: 36px;
+    }
+
+    .svc-row:last-child { border-bottom: none; }
+
+    .svc-left {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .svc-icon {
+      font-size: 14px;
+      width: 20px;
+      text-align: center;
+      line-height: 1;
+    }
+
+    .svc-label { color: #3c4043; }
+
+    /* ── Toggle switch ───────────────────────────────────── */
+    .toggle {
+      position: relative;
+      width: 36px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .toggle input { opacity: 0; position: absolute; width: 0; height: 0; }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: #dadce0;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .slider::before {
+      content: '';
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      left: 3px;
+      top: 3px;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.28);
+      transition: transform 0.18s;
+    }
+
+    input:checked + .slider { background: #1a73e8; }
+    input:checked + .slider::before { transform: translateX(16px); }
+    input:disabled + .slider { cursor: default; opacity: 0.7; }
+
+    /* ── "Included with Search" badge ────────────────────── */
+    .badge {
+      font-size: 10px;
+      font-weight: 500;
+      color: #1a73e8;
+      background: #e8f0fe;
+      padding: 2px 8px;
+      border-radius: 10px;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="9.5" stroke="#1a73e8" stroke-width="1.5"/>
+      <circle cx="12" cy="12" r="3.5" fill="#1a73e8"/>
+      <line x1="12" y1="2.5"  x2="12" y2="6"    stroke="#1a73e8" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="12" y1="18"   x2="12" y2="21.5" stroke="#1a73e8" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="2.5"  y1="12" x2="6"   y2="12"  stroke="#1a73e8" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="18"   y1="12" x2="21.5" y2="12" stroke="#1a73e8" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <h1>Anonymous Google Search</h1>
+  </div>
+
+  <div class="main-row">
+    <div>
+      <div class="label">🔍 Google Search</div>
+      <div class="sub">Strips cookies from all searches</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" id="search-toggle" checked>
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="section-head">Also strip cookies for</div>
+  <div class="services-list" id="services-list"></div>
+
+  <script src="services.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
