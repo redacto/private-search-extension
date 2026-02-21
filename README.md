@@ -29,6 +29,12 @@ Chrome and Firefox append tracking parameters to every search URL (`rlz`, `oq`, 
 **Tracking cookie suppression**
 The following cookies are deleted immediately if Google attempts to set them: `NID`, `ANID`, `IDE`, `DSID`, `OTZ`, `AEC`, `1P_JAR`, `DV`, `UULE`. These are used for ad targeting, session binding, and geo-tracking, and serve no functional purpose for search.
 
+## No browser history (optional)
+
+The extension can delete Google Search, YouTube, and YouTube Music pages from the browser's local history as you visit them. When enabled, any navigation to those services — including paginated search results, individual YouTube videos, and YouTube Music pages — is removed from the browser history immediately after it is recorded. The toggle is available in the popup and applies to all three services simultaneously.
+
+This works by listening for `history.onVisited` events and calling `history.deleteUrl` for any matching URL. The browser writes the entry first and the extension erases it reactively; there is no API to prevent the write entirely, so the deletion happens in the same event tick and is not visible in practice.
+
 ## Optional service protection
 
 YouTube and YouTube Music can optionally be isolated in the same way. When enabled for a service, the extension strips cookies from all requests to that service's domain, overrides `document.cookie` on those pages, and blocks cross-origin identity checks — the background XHR requests those services make to `accounts.google.com` to verify sign-in state.
@@ -45,7 +51,7 @@ This extension is designed for use with an anonymous VPN. Without one, your IP a
 |---|---|
 | `rules.json` | Static declarative rules: strips `Cookie` from Google Search requests, redirects tracking-parameter URLs |
 | `content.js` | Injected into Google Search at `document_start` in the page's JS context; hides cookies from page scripts and cleans URLs via history API interception |
-| `background.js` | Service worker (Chrome) / persistent background page (Firefox); manages dynamic rules, cookie suppression, and service toggles |
+| `background.js` | Service worker (Chrome) / persistent background page (Firefox); manages dynamic rules, cookie suppression, service toggles, and browser history deletion |
 | `cookie-hide.js` | Dynamically injected into optional service pages when their toggle is on; hides cookies from page scripts on those domains |
 | `services.js` | Shared service definitions consumed by both the background script and the popup |
 | `popup.html/js` | Toggle UI for enabling/disabling protection for Google Search and each optional service |

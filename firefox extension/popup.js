@@ -1,5 +1,6 @@
 const searchToggle  = document.getElementById('search-toggle');
 const servicesList  = document.getElementById('services-list');
+const historyToggle = document.getElementById('history-toggle');
 
 // ── Build a service row using the DOM API (avoids innerHTML injection risk) ──
 function buildServiceRow(svc, state) {
@@ -73,7 +74,18 @@ function renderServices(state) {
 chrome.runtime.sendMessage({ type: 'getState' }, (state) => {
   if (chrome.runtime.lastError || !state) return;
   searchToggle.checked = state.searchEnabled !== false;
+  historyToggle.checked = state.historyDelete === true;
   renderServices(state);
+});
+
+// ── History delete toggle ────────────────────────────────────────────────────
+historyToggle.addEventListener('change', function () {
+  this.disabled = true;
+  chrome.runtime.sendMessage({ type: 'toggleHistoryDelete' }, (resp) => {
+    void chrome.runtime.lastError;
+    this.disabled = false;
+    if (resp) this.checked = resp.historyDelete;
+  });
 });
 
 // ── Main Search toggle ──────────────────────────────────────────────────────

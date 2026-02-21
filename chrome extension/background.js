@@ -1,5 +1,28 @@
 importScripts('services.js');
 
+// ── History deletion ─────────────────────────────────────────────────────────
+// Returns true for any URL that belongs to a service we manage.
+// Used to decide whether to delete a history entry when the feature is on.
+function isHistoryTarget(url) {
+  try {
+    const u = new URL(url);
+    const h = u.hostname;
+    if ((h === 'www.google.com' || h === 'google.com') && u.pathname.startsWith('/search')) return true;
+    if (h === 'youtube.com' || h === 'www.youtube.com' || h === 'm.youtube.com') return true;
+    if (h === 'music.youtube.com') return true;
+  } catch (_) {}
+  return false;
+}
+
+// Read from storage each time rather than caching in a variable, because the
+// service worker may restart between visits and an in-memory flag would be lost.
+chrome.history.onVisited.addListener((item) => {
+  if (!isHistoryTarget(item.url)) return;
+  chrome.storage.local.get('historyDelete', (data) => {
+    if (data.historyDelete) chrome.history.deleteUrl({ url: item.url });
+  });
+});
+
 // ── Tracking cookie blocker ─────────────────────────────────────────────────
 const BLOCKED_COOKIE_NAMES = new Set([
   'NID',    // Stores user preferences & tracks searches
@@ -101,6 +124,7 @@ chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.local.get(null, async (current) => {
     const updates = {};
     if (!('searchEnabled' in current)) updates.searchEnabled = true;
+    if (!('historyDelete' in current)) updates.historyDelete = false;
     for (const svc of SERVICES) {
       if (!(svc.id in current)) updates[svc.id] = false;
     }
@@ -158,6 +182,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         chrome.declarativeNetRequest.updateEnabledRulesets(opts, () => {
           sendResponse({ searchEnabled: next });
         });
+      });
+    });
+    return true;
+  }
+
+  if (message.type === 'toggleHistoryDelete') {
+    chrome.storage.local.get('historyDelete', (data) => {
+      const next = !data.historyDelete;
+      chrome.storage.local.set({ historyDelete: next }, () => {
+        sendResponse({ historyDelete: next });
       });
     });
     return true;

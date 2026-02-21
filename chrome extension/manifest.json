@@ -7,7 +7,8 @@
     "declarativeNetRequest",
     "storage",
     "cookies",
-    "scripting"
+    "scripting",
+    "history"
   ],
   "host_permissions": [
     "*://google.com/*",
