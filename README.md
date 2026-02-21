@@ -22,7 +22,7 @@ Before each request to `google.com/search`, the extension removes the `Cookie` r
 Google's page JavaScript reads `document.cookie` directly to determine sign-in state and render the account widget. The extension injects a script at `document_start` — before any page code runs — that overrides the `document.cookie` getter to return an empty string. The cookies remain in the browser's store and are available to other Google services; they are only hidden from Google Search's own scripts.
 
 **Tracking parameter removal**
-Chrome and Firefox append tracking parameters to every search URL (`rlz`, `oq`, `aqs`). The extension redirects these URLs at the network level, stripping those parameters before the request leaves the browser. It also intercepts `history.pushState` and `history.replaceState` to remove server-side tracking parameters (`sei`, `ved`, `ei`, and others) that Google appends to the URL after the page loads.
+Chrome and Firefox append tracking parameters to every search URL (`rlz`, `oq`, `aqs`). The extension redirects these URLs at the network level, stripping those parameters before the request leaves the browser. A content script also cleans the URL on initial page load and intercepts `history.pushState` and `history.replaceState` to catch parameters Google appends after the page loads (`sei`, `ved`, `ei`, and others). Rather than targeting specific parameter names, the script uses a strict whitelist — only functional parameters (`q`, `tbm`, `tbs`, `safe`, `num`, `start`, `hl`, `gl`, and a few others) are kept; everything else is stripped.
 
 **Tracking cookie suppression**
 The following cookies are deleted immediately if Google attempts to set them: `NID`, `ANID`, `IDE`, `DSID`, `OTZ`, `AEC`, `1P_JAR`, `DV`, `UULE`. These are used for ad targeting, session binding, and geo-tracking, and serve no functional purpose for search.
@@ -33,6 +33,10 @@ YouTube and YouTube Music can optionally be isolated in the same way. When enabl
 
 On Chrome, cross-origin identity checks are intercepted using declarative network rules scoped to the initiating domain. On Firefox, the equivalent is implemented using the blocking `webRequest` API, which inspects the `originUrl` of each request to `*.google.com` to determine whether it was initiated by an enabled service.
 
+## Privacy note
+
+This extension is designed for use with an anonymous VPN. Without one, your IP address remains visible to Google and can be used to correlate searches — potentially with more precision than a signed-in account that has Search History disabled. The extension removes account-level identifiers from search requests; it does not anonymise the network connection itself.
+
 ## Architecture
 
 | Component | Role |
@@ -42,4 +46,4 @@ On Chrome, cross-origin identity checks are intercepted using declarative networ
 | `background.js` | Service worker (Chrome) / persistent background page (Firefox); manages dynamic rules, cookie suppression, and service toggles |
 | `cookie-hide.js` | Dynamically injected into optional service pages when their toggle is on; hides cookies from page scripts on those domains |
 | `services.js` | Shared service definitions consumed by both the background script and the popup |
-| `popup.html/js` | Toggle UI for enabling/disabling protection per service |
+| `popup.html/js` | Toggle UI for enabling/disabling protection for Google Search and each optional service |
