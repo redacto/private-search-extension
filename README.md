@@ -2,4 +2,4 @@
 <BR><BR>
 Chrome extension works in Brave and Edge
 <BR><BR>
-Firefox extension works in librewolf, mullvad and tor browser
+Firefox extension works in Librewolf, Mullvad and TOR browser
